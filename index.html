@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVenture - Open Trip Blok M</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font (Poppins & Schoolbell for Doodle style) -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Schoolbell&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        mBg: '#FDF8F5',       /* Krem pastel */
+                        mPink: '#FFE5EC',     /* Pink lembut */
+                        mCoral: '#FF758F',    /* Coral / Pink terang */
+                        mDarkPink: '#FF4D6D', /* Dark Coral untuk Hover */
+                        mText: '#2B2D42',     /* Teks Gelap */
+                        mCardBg: '#FFFFFF',   /* Kartu Putih */
+                    },
+                    fontFamily: {
+                        sans: ['Poppins', 'sans-serif'],
+                        doodle: ['Schoolbell', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .doodle-border {
+            border: 2px dashed #FF758F;
+        }
+        .page-section {
+            display: none;
+        }
+        .page-section.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="bg-mBg text-mText font-sans min-h-screen flex flex-col justify-between">
+
+    <!-- ================= NAVBAR ================= -->
+    <nav class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-mPink shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo -->
+                <div class="flex items-center cursor-pointer" onclick="navigateTo('beranda')">
+                    <div class="bg-mCoral text-white font-bold text-2xl px-3 py-1 rounded-xl shadow-sm tracking-wider flex items-center gap-1">
+                        <span>M</span><span class="text-mPink font-doodle text-xl">venture</span>
+                    </div>
+                    <span class="text-xs text-mCoral font-semibold ml-2 hidden sm:inline">Explore More, Experience M.</span>
+                </div>
+
+                <!-- Desktop Menu Navigation -->
+                <div class="hidden md:flex items-center space-x-6 text-sm font-medium">
+                    <button onclick="navigateTo('beranda')" class="nav-btn px-3 py-1 rounded-full text-mDarkPink bg-mPink hover:bg-mPink transition" id="nav-beranda">Beranda</button>
+                    <button onclick="navigateTo('tentang')" class="nav-btn px-3 py-1 rounded-full hover:text-mCoral transition" id="nav-tentang">Tentang</button>
+                    <button onclick="navigateTo('jelajah')" class="nav-btn px-3 py-1 rounded-full hover:text-mCoral transition" id="nav-jelajah">Jelajah Blok M</button>
+                    <button onclick="navigateTo('kuliner')" class="nav-btn px-3 py-1 rounded-full hover:text-mCoral transition" id="nav-kuliner">Kuliner</button>
+                    <button onclick="navigateTo('galeri')" class="nav-btn px-3 py-1 rounded-full hover:text-mCoral transition" id="nav-galeri">Galeri</button>
+                    <button onclick="navigateTo('pemesanan')" class="nav-btn px-3 py-1 rounded-full hover:text-mCoral transition" id="nav-pemesanan">Pemesanan</button>
+                    <button onclick="navigateTo('kontak')" class="nav-btn px-3 py-1 rounded-full hover:text-mCoral transition" id="nav-kontak">Kontak</button>
+                </div>
+
+                <!-- Action Button -->
+                <div class="hidden md:flex items-center space-x-3">
+                    <button onclick="alert('Cari destinasi atau makanan favoritmu!')" class="p-2 text-gray-500 hover:text-mCoral transition">
+                        <i class="fa-solid fa-magnifying-glass text-lg"></i>
+                    </button>
+                    <button onclick="navigateTo('pemesanan')" class="bg-mCoral hover:bg-mDarkPink text-white font-semibold px-5 py-2.5 rounded-full shadow-md transition transform active:scale-95 flex items-center gap-2">
+                        Daftar Sekarang <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Hamburger Button -->
+                <div class="md:hidden flex items-center">
+                    <button id="mobile-menu-btn" class="p-2 rounded-md text-mCoral focus:outline-none">
+                        <i class="fa-solid fa-bars text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Dropdown Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-b border-mPink px-4 pt-2 pb-4 space-y-2 text-center">
+            <button onclick="navigateTo('beranda'); toggleMobileMenu()" class="block w-full py-2 font-medium text-mCoral">Beranda</button>
+            <button onclick="navigateTo('tentang'); toggleMobileMenu()" class="block w-full py-2 font-medium">Tentang</button>
+            <button onclick="navigateTo('jelajah'); toggleMobileMenu()" class="block w-full py-2 font-medium">Jelajah Blok M</button>
+            <button onclick="navigateTo('kuliner'); toggleMobileMenu()" class="block w-full py-2 font-medium">Kuliner</button>
+            <button onclick="navigateTo('galeri'); toggleMobileMenu()" class="block w-full py-2 font-medium">Galeri</button>
+            <button onclick="navigateTo('pemesanan'); toggleMobileMenu()" class="block w-full py-2 font-medium">Pemesanan</button>
+            <button onclick="navigateTo('voucher'); toggleMobileMenu()" class="block w-full py-2 font-medium">Voucher</button>
+            <button onclick="navigateTo('catatan'); toggleMobileMenu()" class="block w-full py-2 font-medium">Catatan Perjalanan</button>
+            <button onclick="navigateTo('kontak'); toggleMobileMenu()" class="block w-full py-2 font-medium">Kontak</button>
+            <button onclick="navigateTo('pemesanan'); toggleMobileMenu()" class="w-full bg-mCoral text-white py-2.5 rounded-full font-semibold mt-2">Daftar Sekarang</button>
+        </div>
+    </nav>
+
+    <!-- ================= KONTEN UTAMA (MULTI-PAGE SPA) ================= -->
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- 1. HALAMAN BERANDA -->
+        <section id="page-beranda" class="page-section active space-y-12">
+            <!-- Hero Section -->
+            <div class="relative bg-mPink rounded-3xl p-6 sm:p-10 overflow-hidden shadow-sm flex flex-col md:flex-row items-center gap-8">
+                <div class="md:w-1/2 space-y-4 z-10">
+                    <div class="inline-block bg-white text-mCoral font-doodle text-lg px-4 py-1 rounded-full shadow-sm border border-mCoral/30">
+                        ✨ Private Walking Tour max 5 orang!
+                    </div>
+                    <h1 class="text-4xl sm:text-5xl font-extrabold text-mDarkPink leading-tight">
+                        Adventure adalah <span class="font-doodle text-mCoral underline decoration-wavy">Mventure!</span>
+                    </h1>
+                    <p class="text-gray-600 text-base sm:text-lg">
+                        Yuk ikut opentrip bareng Mventure, dan rasakan serunya menjelajah, kulineran, dan ketemu teman baru di Blok M!
+                    </p>
+                    <div class="pt-2">
+                        <button onclick="navigateTo('pemesanan')" class="bg-mCoral hover:bg-mDarkPink text-white font-bold px-8 py-3.5 rounded-full shadow-lg transition transform hover:scale-105 flex items-center gap-2">
+                            Daftar Sekarang <i class="fa-solid fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="md:w-1/2 relative">
+                    <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=800&q=80" alt="Blok M Plaza" class="rounded-2xl shadow-md w-full h-64 sm:h-80 object-cover">
+                    <div class="absolute -bottom-4 -left-4 bg-white p-3 rounded-2xl shadow-lg flex items-center gap-3 border border-mPink">
+                        <i class="fa-solid fa-location-dot text-mCoral text-2xl"></i>
+                        <div>
+                            <p class="font-bold text-xs">Jelajahi Blok M</p>
+                            <p class="text-xs text-gray-500">dengan cara baru bareng Mventure M!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ringkasan Fitur / Highlights -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div onclick="navigateTo('jelajah')" class="bg-white p-6 rounded-2xl border border-mPink shadow-sm hover:shadow-md transition cursor-pointer flex items-center gap-4">
+                    <div class="bg-mPink p-4 rounded-xl text-mCoral text-2xl"><i class="fa-solid fa-map-location-dot"></i></div>
+                    <div>
+                        <h3 class="font-bold text-lg">Peta & Rute</h3>
+                        <p class="text-xs text-gray-500">Rute terarah dari M Bloc hingga Little Tokyo</p>
+                    </div>
+                </div>
+                <div onclick="navigateTo('kuliner')" class="bg-white p-6 rounded-2xl border border-mPink shadow-sm hover:shadow-md transition cursor-pointer flex items-center gap-4">
+                    <div class="bg-mPink p-4 rounded-xl text-mCoral text-2xl"><i class="fa-solid fa-utensils"></i></div>
+                    <div>
+                        <h3 class="font-bold text-lg">Kuliner Khas</h3>
+                        <p class="text-xs text-gray-500">Rekomendasi Matcha Ube, Gultik, & Love Cheese</p>
+                    </div>
+                </div>
+                <div onclick="navigateTo('galeri')" class="bg-white p-6 rounded-2xl border border-mPink shadow-sm hover:shadow-md transition cursor-pointer flex items-center gap-4">
+                    <div class="bg-mPink p-4 rounded-xl text-mCoral text-2xl"><i class="fa-solid fa-camera"></i></div>
+                    <div>
+                        <h3 class="font-bold text-lg">Dokumentasi Foto</h3>
+                        <p class="text-xs text-gray-500">Pulang membawa hasil foto estetis & berkualitas</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. HALAMAN TENTANG MVENTURE -->
+        <section id="page-tentang" class="page-section space-y-8">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 border border-mPink shadow-sm flex flex-col md:flex-row gap-8 items-center">
+                <div class="md:w-1/2 space-y-4">
+                    <span class="text-mCoral font-bold text-sm tracking-wide uppercase">Tentang Mventure</span>
+                    <h2 class="text-3xl font-extrabold text-mDarkPink">Pengalaman Walking Tour Privat & Berkualitas</h2>
+                    <p class="text-gray-600 leading-relaxed text-sm sm:text-base">
+                        Mventure adalah penyedia open trip yang fokus pada pengalaman berkesan, seru, dan autentik. Kami percaya bahwa setiap perjalanan adalah cerita, dan kami ingin kamu menjadi bagian darinya.
+                    </p>
+                    <p class="text-gray-600 leading-relaxed text-sm sm:text-base">
+                        Berbeda dengan open trip umum yang membawa puluhan orang sekaligus, MVenture secara konsisten membatasi kuotanya maksimal lima orang per sesi agar suasana terasa santai, akrab, dan efisien.
+                    </p>
+                    <button onclick="navigateTo('pemesanan')" class="mt-4 bg-mPink text-mDarkPink font-semibold px-6 py-2.5 rounded-full hover:bg-mCoral hover:text-white transition">
+                        Kenali Lebih Lanjut <i class="fa-solid fa-chevron-right text-xs ml-1"></i>
+                    </button>
+                </div>
+                <div class="md:w-1/2 grid grid-cols-2 gap-4">
+                    <div class="bg-mBg p-4 rounded-2xl text-center border border-mPink">
+                        <i class="fa-solid fa-heart text-mCoral text-3xl mb-2"></i>
+                        <h4 class="font-bold text-sm">Trip Seru & Terpercaya</h4>
+                    </div>
+                    <div class="bg-mBg p-4 rounded-2xl text-center border border-mPink">
+                        <i class="fa-solid fa-user-group text-mCoral text-3xl mb-2"></i>
+                        <h4 class="font-bold text-sm">Teman Baru di Setiap Trip</h4>
+                    </div>
+                    <div class="bg-mBg p-4 rounded-2xl text-center border border-mPink">
+                        <i class="fa-solid fa-compass text-mCoral text-3xl mb-2"></i>
+                        <h4 class="font-bold text-sm">Destinasi Menarik</h4>
+                    </div>
+                    <div class="bg-mBg p-4 rounded-2xl text-center border border-mPink">
+                        <i class="fa-solid fa-user-shield text-mCoral text-3xl mb-2"></i>
+                        <h4 class="font-bold text-sm">Tim Profesional</h4>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. HALAMAN JELAJAH BLOK M -->
+        <section id="page-jelajah" class="page-section space-y-8">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 border border-mPink shadow-sm">
+                <div class="text-center max-w-xl mx-auto mb-8">
+                    <h2 class="text-3xl font-extrabold text-mDarkPink mb-2">Peta & Rute Perjalanan</h2>
+                    <p class="text-gray-500 text-sm">Titik kumpul, rute perjalanan, dan destinasi yang akan kita kunjungi selama open trip.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <!-- Iterative Timeline -->
+                    <div class="space-y-4">
+                        <div class="flex items-start gap-4 p-3 bg-mBg rounded-2xl border border-mPink">
+                            <span class="bg-mCoral text-white font-bold w-8 h-8 rounded-full flex items-center justify-center shrink-0">1</span>
+                            <div>
+                                <h4 class="font-bold text-sm">Titik Kumpul - Blok M Plaza (08.00 WIB)</h4>
+                                <p class="text-xs text-gray-500">Briefing awal dan perkenalan anggota kelompok.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-3 bg-mBg rounded-2xl border border-mPink">
+                            <span class="bg-mCoral text-white font-bold w-8 h-8 rounded-full flex items-center justify-center shrink-0">2</span>
+                            <div>
+                                <h4 class="font-bold text-sm">Meeting Point - Blok M Square (08.30 WIB)</h4>
+                                <p class="text-xs text-gray-500">Menjelajahi area Little Tokyo dan spot estetik.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-3 bg-mBg rounded-2xl border border-mPink">
+                            <span class="bg-mCoral text-white font-bold w-8 h-8 rounded-full flex items-center justify-center shrink-0">3</span>
+                            <div>
+                                <h4 class="font-bold text-sm">Kunjungan Kuliner - Area Blok M (10.00 WIB)</h4>
+                                <p class="text-xs text-gray-500">Mencicipi Gultik, Matcha Ube, dan kuliner legendaris.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-3 bg-mBg rounded-2xl border border-mPink">
+                            <span class="bg-mCoral text-white font-bold w-8 h-8 rounded-full flex items-center justify-center shrink-0">4</span>
+                            <div>
+                                <h4 class="font-bold text-sm">Jelajah & Foto - Area M Bloc (12.00 WIB)</h4>
+                                <p class="text-xs text-gray-500">Sesi foto dokumentasi bersama Tour Leader.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-4 p-3 bg-mBg rounded-2xl border border-mPink">
+                            <span class="bg-mCoral text-white font-bold w-8 h-8 rounded-full flex items-center justify-center shrink-0">5</span>
+                            <div>
+                                <h4 class="font-bold text-sm">Photo Booth - Blok M Plaza (14.00 WIB)</h4>
+                                <p class="text-xs text-gray-500">Cetak foto kenangan bersama teman-teman baru.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Map Image -->
+                    <div class="relative rounded-2xl overflow-hidden border-2 doodle-border p-2 bg-mPink">
+                        <img src="https://images.unsplash.com/photo-1526778548025-fa2f459cd5c1?auto=format&fit=crop&w=800&q=80" alt="Peta Blok M" class="rounded-xl w-full h-80 object-cover">
+                        <div class="absolute inset-0 bg-black/20 flex items-center justify-center">
+                            <span class="bg-white text-mCoral font-bold px-4 py-2 rounded-full shadow-md text-sm"><i class="fa-solid fa-map-pin"></i> Interactive Route Active</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. HALAMAN KULINER BLOK M -->
+        <section id="page-kuliner" class="page-section space-y-8">
+            <div class="text-center max-w-xl mx-auto">
+                <h2 class="text-3xl font-extrabold text-mDarkPink mb-2">Rekomendasi Kuliner Blok M</h2>
+                <p class="text-gray-500 text-sm">Cicipi berbagai makanan dan minuman favorit di Blok M bersama Mventure!</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-2xl border border-mPink overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="https://images.unsplash.com/photo-1536256263959-770b48d82b0a?auto=format&fit=crop&w=500&q=80" alt="Matcha Ube" class="w-full h-48 object-cover">
+                    <div class="p-4 space-y-2">
+                        <h3 class="font-bold text-lg">Matcha Ube</h3>
+                        <p class="text-xs text-gray-500">Matcha creamy, rasa otentik dengan sentuhan ube manis.</p>
+                        <button onclick="alert('Matcha Ube: Kombinasi minuman khas Jepang dan ube lokal yang menyegarkan!')" class="w-full bg-mPink text-mDarkPink py-2 rounded-xl text-xs font-semibold hover:bg-mCoral hover:text-white transition">Lihat Detail</button>
+                    </div>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white rounded-2xl border border-mPink overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=500&q=80" alt="Gultik Blok M" class="w-full h-48 object-cover">
+                    <div class="p-4 space-y-2">
+                        <h3 class="font-bold text-lg">Gultik Blok M</h3>
+                        <p class="text-xs text-gray-500">Gulai Tikungan legendaris sejak dulu dengan rasa gurih khas.</p>
+                        <button onclick="alert('Gultik: Kuliner wajib malam dan siang di kawasan Blok M Plaza!')" class="w-full bg-mPink text-mDarkPink py-2 rounded-xl text-xs font-semibold hover:bg-mCoral hover:text-white transition">Lihat Detail</button>
+                    </div>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white rounded-2xl border border-mPink overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="https://images.unsplash.com/photo-1528735602780-2552fd46c7af?auto=format&fit=crop&w=500&q=80" alt="Love Cheese" class="w-full h-48 object-cover">
+                    <div class="p-4 space-y-2">
+                        <h3 class="font-bold text-lg">Love Cheese</h3>
+                        <p class="text-xs text-gray-500">Roti bakar & keju lumer, Cheese lovers wajib coba!</p>
+                        <button onclick="alert('Love Cheese: Camilan keju leleh estetik untuk menemani jalan-jalan.')" class="w-full bg-mPink text-mDarkPink py-2 rounded-xl text-xs font-semibold hover:bg-mCoral hover:text-white transition">Lihat Detail</button>
+                    </div>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-white rounded-2xl border border-mPink overflow-hidden shadow-sm hover:shadow-md transition">
+                    <img src="https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=500&q=80" alt="Photo booth" class="w-full h-48 object-cover">
+                    <div class="p-4 space-y-2">
+                        <h3 class="font-bold text-lg">Photobooth Moment</h3>
+                        <p class="text-xs text-gray-500">Abadikan momen seru open trip dalam bentuk foto fisik!</p>
+                        <button onclick="alert('Photobooth: Cetak strip foto unik bertema Mventure!')" class="w-full bg-mPink text-mDarkPink py-2 rounded-xl text-xs font-semibold hover:bg-mCoral hover:text-white transition">Lihat Detail</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. HALAMAN GALERI MOMENT -->
+        <section id="page-galeri" class="page-section space-y-8">
+            <div class="text-center max-w-xl mx-auto">
+                <h2 class="text-3xl font-extrabold text-mDarkPink mb-2">Galeri Moment</h2>
+                <p class="text-gray-500 text-sm">Lihat keseruan perjalanan peserta open trip Mventure di Blok M!</p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80" alt="Galeri 1" class="rounded-2xl h-48 sm:h-64 w-full object-cover shadow-sm hover:opacity-90 transition cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=600&q=80" alt="Galeri 2" class="rounded-2xl h-48 sm:h-64 w-full object-cover shadow-sm hover:opacity-90 transition cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80" alt="Galeri 3" class="rounded-2xl h-48 sm:h-64 w-full object-cover shadow-sm hover:opacity-90 transition cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1539635273304-0e8723e07316?auto=format&fit=crop&w=600&q=80" alt="Galeri 4" class="rounded-2xl h-48 sm:h-64 w-full object-cover shadow-sm hover:opacity-90 transition cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?auto=format&fit=crop&w=600&q=80" alt="Galeri 5" class="rounded-2xl h-48 sm:h-64 w-full object-cover shadow-sm hover:opacity-90 transition cursor-pointer">
+                <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=600&q=80" alt="Galeri 6" class="rounded-2xl h-48 sm:h-64 w-full object-cover shadow-sm hover:opacity-90 transition cursor-pointer">
+            </div>
+        </section>
+
+        <!-- 6. HALAMAN PEMESANAN OPEN TRIP -->
+        <section id="page-pemesanan" class="page-section space-y-8">
+            <div class="max-w-2xl mx-auto bg-white rounded-3xl p-6 sm:p-10 border border-mPink shadow-md space-y-6">
+                <div class="text-center">
+                    <h2 class="text-3xl font-extrabold text-mDarkPink mb-2">Pemesanan Open Trip</h2>
+                    <p class="text-gray-500 text-sm">Isi data diri kamu untuk ikut serta dalam keseruan Mventure Blok M!</p>
+                </div>
+
+                <form id="orderForm" onsubmit="handleFormSubmit(event)" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Nama Lengkap</label>
+                        <input type="text" id="formNama" required placeholder="Contoh: Budi Santoso" class="w-full px-4 py-2.5 rounded-xl border border-mPink focus:outline-none focus:border-mCoral text-sm">
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">Email</label>
+                            <input type="email" id="formEmail" required placeholder="nama@email.com" class="w-full px-4 py-2.5 rounded-xl border border-mPink focus:outline-none focus:border-mCoral text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-gray-700 mb-1">No. WhatsApp</label>
+                            <input type="tel" id="formWa" required placeholder="08123456789" class="w-full px-4 py-2.5 rounded-xl border border-mPink focus:outline-none focus:border-mCoral text-sm">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-gray-700 mb-1">Jumlah Peserta (Max 5 orang/sesi)</label>
+                        <select id="formPeserta" onchange="updatePrice()" class="w-full px-4 py-2.5 rounded-xl border border-mPink focus:outline-none focus:border-mCoral text-sm bg-white">
+                            <option value="1">1 Orang</option>
+                            <option value="2">2 Orang</option>
+                            <option value="3">3 Orang</option>
+                            <option value="4">4 Orang</option>
+                            <option value="5">5 Orang (Group Full)</option>
+                        </select>
+                    </div>
+
+                    <!-- Details Pricing Card -->
+                    <div class="bg-mPink/50 p-4 rounded-2xl border border-mPink flex justify-between items-center">
+                        <div>
+                            <p class="text-xs text-gray-500">Harga Tiket Per Orang</p>
+                            <p class="text-xl font-extrabold text-mDarkPink" id="totalPrice">Rp150.000</p>
+                        </div>
+                        <span class="text-xs bg-white text-mCoral font-bold px-3 py-1 rounded-full border border-mPink">Termasuk Foto & Tour Leader</span>
+                    </div>
+
+                    <button type="submit" class="w-full bg-mCoral hover:bg-mDarkPink text-white font-bold py-3.5 rounded-full shadow-lg transition transform active:scale-95">
+                        Daftar Sekarang <i class="fa-solid fa-paper-plane ml-1"></i>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- 7. HALAMAN VOUCHER & SOUVENIR -->
+        <section id="page-voucher" class="page-section space-y-8">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 border border-mPink shadow-sm text-center max-w-2xl mx-auto space-y-6">
+                <i class="fa-solid fa-gift text-5xl text-mCoral"></i>
+                <h2 class="text-3xl font-extrabold text-mDarkPink">Voucher & Souvenir Digital</h2>
+                <p class="text-gray-600 text-sm">Dapatkan voucher potongan makan & minum serta souvenir digital eksklusif (E-preset foto & E-certificate) setelah perjalanan selesai!</p>
+                <div class="p-6 bg-mPink rounded-2xl doodle-border inline-block">
+                    <p class="font-doodle text-xl text-mDarkPink font-bold">Kode Voucher: MVENTUREBLOKM</p>
+                    <p class="text-xs text-gray-500 mt-1">Gunakan saat pemesanan makanan di tenant rute kami.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. HALAMAN CATATAN PERJALANAN -->
+        <section id="page-catatan" class="page-section space-y-8">
+            <div class="bg-white rounded-3xl p-6 sm:p-10 border border-mPink shadow-sm max-w-2xl mx-auto space-y-6">
+                <h2 class="text-3xl font-extrabold text-mDarkPink text-center">Catatan Perjalanan</h2>
+                <p class="text-gray-500 text-sm text-center">Beberapa hal yang perlu kamu tahu sebelum berangkat:</p>
+                
+                <ul class="space-y-3 text-sm text-gray-700">
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check-circle text-mCoral text-lg"></i> Gunakan pakaian dan alas kaki yang nyaman untuk berjalan santai.</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check-circle text-mCoral text-lg"></i> Bawa uang tunai secukupnya untuk jajanan kuliner lokal.</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check-circle text-mCoral text-lg"></i> Jaga barang bawaan pribadi masing-masing.</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check-circle text-mCoral text-lg"></i> Tetap patuhi arahan dari Tour Leader Mventure.</li>
+                    <li class="flex items-center gap-3"><i class="fa-solid fa-check-circle text-mCoral text-lg"></i> Jangan lupa membawa kamera atau HP dengan baterai penuh!</li>
+                </ul>
+
+                <div class="text-center pt-4">
+                    <span class="font-doodle text-2xl text-mCoral font-bold">See you at Blok M! ♡</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. HALAMAN KONTAK -->
+        <section id="page-kontak" class="page-section space-y-8">
+            <div class="bg-mDarkPink text-white rounded-3xl p-6 sm:p-10 shadow-lg max-w-2xl mx-auto space-y-6">
+                <div class="text-center space-y-2">
+                    <div class="text-3xl font-bold">MVenture</div>
+                    <p class="font-doodle text-mPink text-lg">Explore More, Experience M.</p>
+                </div>
+
+                <div class="space-y-4 pt-4 text-sm">
+                    <a href="https://instagram.com" target="_blank" class="flex items-center gap-4 bg-white/10 p-3 rounded-2xl hover:bg-white/20 transition">
+                        <i class="fa-brands fa-instagram text-2xl"></i>
+                        <span>@mventure.official</span>
+                    </a>
+                    <a href="mailto:mventure.official@gmail.com" class="flex items-center gap-4 bg-white/10 p-3 rounded-2xl hover:bg-white/20 transition">
+                        <i class="fa-solid fa-envelope text-2xl"></i>
+                        <span>mventure.official@gmail.com</span>
+                    </a>
+                    <a href="https://wa.me/6281234567890" target="_blank" class="flex items-center gap-4 bg-white/10 p-3 rounded-2xl hover:bg-white/20 transition">
+                        <i class="fa-brands fa-whatsapp text-2xl"></i>
+                        <span>+62 812-3456-7890</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ================= FOOTER ================= -->
+    <footer class="bg-gray-900 text-white py-8 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-2">
+                <span class="font-bold text-xl text-mCoral">MVenture</span>
+                <span class="text-xs text-gray-400">| © 2026 MVenture Tour Guide. All rights reserved.</span>
+            </div>
+            <div class="flex space-x-4 text-sm text-gray-400">
+                <button onclick="navigateTo('beranda')" class="hover:text-white">Beranda</button>
+                <button onclick="navigateTo('tentang')" class="hover:text-white">Tentang</button>
+                <button onclick="navigateTo('pemesanan')" class="hover:text-white">Pemesanan</button>
+                <button onclick="navigateTo('kontak')" class="hover:text-white">Kontak</button>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================= JAVASCRIPT LOGIC ================= -->
+    <script>
+        // SPA Page Navigation
+        function navigateTo(pageId) {
+            // Hide all pages
+            const pages = document.querySelectorAll('.page-section');
+            pages.forEach(page => page.classList.remove('active'));
+
+            // Show selected page
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) {
+                targetPage.classList.add('active');
+            }
+
+            // Update nav active state (Desktop)
+            const navButtons = document.querySelectorAll('.nav-btn');
+            navButtons.forEach(btn => {
+                btn.classList.remove('bg-mPink', 'text-mDarkPink');
+            });
+            
+            const activeNav = document.getElementById(`nav-${pageId}`);
+            if (activeNav) {
+                activeNav.classList.add('bg-mPink', 'text-mDarkPink');
+            }
+
+            // Scroll to top smooth
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Toggle Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
+
+        // Calculate Price based on Participant count
+        function updatePrice() {
+            const count = parseInt(document.getElementById('formPeserta').value);
+            const pricePerPerson = 150000;
+            const total = count * pricePerPerson;
+            document.getElementById('totalPrice').innerText = `Rp${total.toLocaleString('id-ID')}`;
+        }
+
+        // Handle Form Booking Submit
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const nama = document.getElementById('formNama').value;
+            const peserta = document.getElementById('formPeserta').value;
+            const wa = document.getElementById('formWa').value;
+
+            alert(`Terima kasih ${nama}! Pemesanan ${peserta} tiket open trip MVenture berhasil dicatat. Kami akan menghubungi Anda via WhatsApp (${wa}).`);
+            
+            // Reset & Navigate to voucher
+            document.getElementById('orderForm').reset();
+            updatePrice();
+            navigateTo('voucher');
+        }
+    </script>
+</body>
+</html>
